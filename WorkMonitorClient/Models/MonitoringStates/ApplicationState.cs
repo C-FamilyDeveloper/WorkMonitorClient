@@ -16,7 +16,7 @@ namespace WorkMonitorClient.Models.MonitoringStates
     {
         public AutomationElement Element { get ; set ; }
 
-        public void CheckHandle(MonitoringContext monitoringContext)
+        public void CheckState(MonitoringContext monitoringContext)
         {
             Element = monitoringContext.AutomationElement;
             monitoringContext.SetState(MonitoringStateFactory.GetState(GetProcessName()));

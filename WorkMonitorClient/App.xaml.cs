@@ -44,7 +44,6 @@ namespace WorkMonitorClient
             services.AddSingleton<INavigationService, NavigationService>(serviceProvider =>
             {
                 var navigationService = new NavigationService(serviceProvider);
-                //navigationService.Initialize(serviceProvider);
                 navigationService.ConfigureWindow<MainViewModel, MainWindow>();
                 return navigationService;
             });

@@ -12,10 +12,9 @@ namespace WorkMonitorClient.ViewModels
     {
         private readonly IDialogService dialogService;
         private readonly INavigationService navigationService;
-
-        public RelayCommand StartMonitor { get; set; }
         private MonitoringService monitoringService = new(intervalMinMilliseconds: 10000, intervalMaxMilliseconds: 20000);
         private CancellationTokenSource cancellationTokenSource = new();
+        public RelayCommand StartMonitor { get; set; }
        
         public MainViewModel(IDialogService dialogService, INavigationService navigationService) 
         {
@@ -24,14 +23,7 @@ namespace WorkMonitorClient.ViewModels
             StartMonitor = new(async () =>
             {
                 navigationService.Hide<MainViewModel>();
-                try
-                {
-                    await monitoringService.StartMonitoring(cancellationTokenSource.Token);
-                }
-                catch (Exception ex)
-                {
-                    dialogService.ShowErrorMessage(ex.Message, "Ошибка");
-                }
+                await monitoringService.StartMonitoring(cancellationTokenSource.Token);
             });
         }
     }

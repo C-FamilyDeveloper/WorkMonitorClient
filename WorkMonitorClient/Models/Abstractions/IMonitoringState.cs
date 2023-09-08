@@ -11,7 +11,7 @@ namespace WorkMonitorClient.Models.Abstractions
     public interface IMonitoringState
     {
         public AutomationElement Element { get; set; }
-        void CheckHandle (MonitoringContext monitoringContext);
+        void CheckState (MonitoringContext monitoringContext);
         MonitorObject GetMonitoringInfo();
     }
 }

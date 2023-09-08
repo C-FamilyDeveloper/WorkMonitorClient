@@ -6,19 +6,17 @@ using System;
 using WorkMonitorClient.Models.PInvoke;
 using System.Windows.Automation;
 using WorkMonitorTypes.Requests;
-using System.Windows;
-using System.IO;
-using System.Text.Json.Serialization;
-using System.Text.Json;
 
 namespace WorkMonitorClient.Models.Services
 {
-
     public class MonitoringService
     {
         private System.Timers.Timer timerScreen = new ();
         private ScreenshotService screenshotService = new();
         private HookService hookService = new();
+        private AutomationElement element;
+        private MonitoringContext monitoringContext = new();
+        private IntPtr currentHWND = IntPtr.Zero;
         public string UserName { get; set; }
         private int intervalMin;
         private int intervalMax;
@@ -67,14 +65,11 @@ namespace WorkMonitorClient.Models.Services
         {
             hookService.Start();
             timerScreen.Start();
-            AutomationElement element;
-            MonitoringContext monitoringContext = new();
-            IntPtr currentHWND = IntPtr.Zero;
-            try
+            await Task.Run(async() =>
             {
-                await Task.Run(async () =>
+                while (!cancellationToken.IsCancellationRequested)
                 {
-                    while (!cancellationToken.IsCancellationRequested)
+                    try
                     {
                         IntPtr hwnd = NativeMethods.GetForegroundWindow();
                         if (currentHWND != hwnd && hwnd != IntPtr.Zero)
@@ -95,20 +90,16 @@ namespace WorkMonitorClient.Models.Services
                                         IdleTime = timeresult,
                                         WorkTime = timeresult,
                                         Worker = UserName
-                                    }); 
+                                    });
                             }
                         }
                     }
-                }, cancellationToken);
-            }
-            catch (Exception)
-            {
-                timerScreen.Stop();
-                hookService.Stop();
-                throw;
-            }
-        }
-
-        
+                    catch (Exception ex)
+                    {
+                        //логгируем ex
+                    }
+                }
+            }, cancellationToken);                       
+        }      
     }
 }

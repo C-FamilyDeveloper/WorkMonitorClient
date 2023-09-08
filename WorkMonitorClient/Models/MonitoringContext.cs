@@ -23,7 +23,7 @@ namespace WorkMonitorClient.Models
 
         public MonitorObject GetMonitoringResult()
         {
-            monitoringState.CheckHandle(this);
+            monitoringState.CheckState(this);
             return monitoringState.GetMonitoringInfo();
         }
         public void SetState(IMonitoringState state)
