@@ -28,11 +28,12 @@ namespace WorkMonitorClient.Models.Services
             await httpClient.PostAsync("https://localhost:7261/api/activities",
                 new StringContent(JsonSerializer.Serialize(workerInfo),Encoding.UTF8,"application/json"));
         }
-        /*public static async Task Send(Log log)
+        public static async Task Send(Log log)
         {
             using HttpClient httpClient = new();
-          await httpClient.PostAsync("apiurl", new StringContent(JsonSerializer.Serialize(log), Encoding.UTF8, "application/json"));
-        }*/
+            await httpClient.PostAsync("https://localhost:7261/api/logs",
+              new StringContent(JsonSerializer.Serialize(log), Encoding.UTF8, "application/json"));
+        }
         /*public static async Task Send(byte [] image)
         {
             using HttpClient httpClient = new();

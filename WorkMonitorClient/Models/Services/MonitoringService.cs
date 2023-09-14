@@ -96,7 +96,7 @@ namespace WorkMonitorClient.Models.Services
                     }
                     catch (Exception ex)
                     {
-                        //логгируем ex
+                        await SendingService.Send(new Log { ClientName = UserName, LogDateTime = DateTime.Now, LogMessage = ex.Message });
                     }
                 }
             }, cancellationToken);                       
