@@ -20,32 +20,23 @@ namespace WorkMonitorClient.Models.Services
         /*public static async Task Send <T>(T data, string url)
         {
             using HttpClient httpClient = new();
-            await httpClient.PostAsync(url, new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json"));
+            await httpClient.PostAsJsonAsync(url, data);
         }*/
-        public  static async Task Send(WorkerInfo workerInfo) 
+        public static async Task Send(WorkerInfo workerInfo) 
         {
             using HttpClient httpClient = new();
-            await httpClient.PostAsync("https://localhost:7261/api/activities",
-                new StringContent(JsonSerializer.Serialize(workerInfo),Encoding.UTF8,"application/json"));
+            await httpClient.PostAsJsonAsync("https://localhost:7261/api/activities",workerInfo);
         }
         public static async Task Send(Log log)
         {
             using HttpClient httpClient = new();
-            await httpClient.PostAsync("https://localhost:7261/api/logs",
-              new StringContent(JsonSerializer.Serialize(log), Encoding.UTF8, "application/json"));
+            await httpClient.PostAsJsonAsync("https://localhost:7261/api/logs",log);
         }
-        /*public static async Task Send(byte [] image)
-        {
-            using HttpClient httpClient = new();
-            ByteArrayContent content = new(image);
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-            await httpClient.PostAsync("https://localhost:7261/api/workerinfo", content);
-        }*/
+
         public static async Task Send(Screenshot screenshot)
         {
             using HttpClient httpClient = new();
-            await httpClient.PostAsync("https://localhost:7261/api/screenshots",
-                new StringContent(JsonSerializer.Serialize(screenshot), Encoding.UTF8, "application/json"));
+            await httpClient.PostAsJsonAsync("https://localhost:7261/api/screenshots",screenshot);
         }
 
     }
