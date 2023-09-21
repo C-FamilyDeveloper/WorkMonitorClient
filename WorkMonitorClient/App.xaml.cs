@@ -10,6 +10,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
+using WorkMonitorClient.Models.Services;
 using WorkMonitorClient.ViewModels;
 using WorkMonitorClient.Views;
 
@@ -47,7 +48,8 @@ namespace WorkMonitorClient
                 navigationService.ConfigureWindow<MainViewModel, MainWindow>();
                 return navigationService;
             });
-            services.AddScoped<MainViewModel>();
+            services.AddSingleton<HttpService>();
+            services.AddSingleton<MonitoringService>();
         }
 
         private void OnStartup(object sender, StartupEventArgs e)

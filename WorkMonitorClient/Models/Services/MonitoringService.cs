@@ -20,12 +20,17 @@ namespace WorkMonitorClient.Models.Services
         public string UserName { get; set; }
         private int intervalMin;
         private int intervalMax;
+        private readonly HttpService httpService;
 
-        public MonitoringService(int intervalMinMilliseconds, int intervalMaxMilliseconds)
+        public MonitoringService(HttpService httpService)
         {
             UserName = Environment.UserName;
-            this.intervalMin = intervalMinMilliseconds;
-            this.intervalMax = intervalMaxMilliseconds;
+            this.httpService = httpService;
+        }
+        public void SetInterval(int intervalMinMilliseconds, int intervalMaxMilliseconds)
+        {
+            intervalMin = intervalMinMilliseconds;
+            intervalMax = intervalMaxMilliseconds;
             timerScreen.Interval = CalculateTimerInterval();
             timerScreen.AutoReset = true;
             timerScreen.Elapsed += OnTimerElapsed;
@@ -37,7 +42,7 @@ namespace WorkMonitorClient.Models.Services
         private async void OnTimerElapsed(object? sender, ElapsedEventArgs e)
         {
             timerScreen.Stop();
-            await SendingService.Send(new Screenshot 
+            await httpService.Send(new Screenshot 
                 {
                     ClientName = UserName,
                     Image = screenshotService.GetScreenshot(),
@@ -81,7 +86,7 @@ namespace WorkMonitorClient.Models.Services
                                 monitoringContext.AutomationElement = element;
                                 var result = monitoringContext.GetMonitoringResult();
                                 var timeresult = hookService.Restart();
-                                await SendingService.Send(
+                                await httpService.Send(
                                     new WorkerInfo
                                     {
                                         Application = result.Application,
@@ -96,7 +101,7 @@ namespace WorkMonitorClient.Models.Services
                     }
                     catch (Exception ex)
                     {
-                        await SendingService.Send(new Log { ClientName = UserName, LogDateTime = DateTime.Now, LogMessage = ex.Message });
+                        await httpService.Send(new Log { ClientName = UserName, LogDateTime = DateTime.Now, LogMessage = ex.Message });
                     }
                 }
             }, cancellationToken);                       

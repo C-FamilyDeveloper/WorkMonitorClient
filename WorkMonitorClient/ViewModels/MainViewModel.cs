@@ -12,14 +12,16 @@ namespace WorkMonitorClient.ViewModels
     {
         private readonly IDialogService dialogService;
         private readonly INavigationService navigationService;
-        private MonitoringService monitoringService = new(intervalMinMilliseconds: 10000, intervalMaxMilliseconds: 20000);
+        private MonitoringService monitoringService;
         private CancellationTokenSource cancellationTokenSource = new();
         public RelayCommand StartMonitor { get; set; }
        
-        public MainViewModel(IDialogService dialogService, INavigationService navigationService) 
+        public MainViewModel(IDialogService dialogService, INavigationService navigationService, MonitoringService monitoringService) 
         {
             this.dialogService = dialogService;
             this.navigationService = navigationService;
+            this.monitoringService = monitoringService;
+            monitoringService.SetInterval(intervalMinMilliseconds:10000, intervalMaxMilliseconds:20000);
             StartMonitor = new(async () =>
             {
                 navigationService.Hide<MainViewModel>();
