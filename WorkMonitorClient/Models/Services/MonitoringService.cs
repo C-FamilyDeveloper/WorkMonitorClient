@@ -92,8 +92,8 @@ namespace WorkMonitorClient.Models.Services
                                         Application = result.Application,
                                         EventDateTime = DateTime.Now,
                                         Site = result.URL,
-                                        IdleTime = timeresult,
-                                        WorkTime = timeresult,
+                                        IdleTime = timeresult.FullTime-timeresult.WorkTime,
+                                        WorkTime = timeresult.WorkTime,
                                         Worker = UserName
                                     });
                             }

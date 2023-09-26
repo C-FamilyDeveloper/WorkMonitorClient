@@ -15,7 +15,7 @@ namespace WorkMonitorClient.Models.Services
         private IntPtr hookIDKeyboard = IntPtr.Zero;
         private const int WHKEYBOARDLL = 13;
         private const int WHMOUSELL = 14;
-        //private Stopwatch fullwatch = new();
+        private Stopwatch fullwatch = new();
         private Stopwatch workwatch = new ();
         
         public HookService() 
@@ -80,28 +80,28 @@ namespace WorkMonitorClient.Models.Services
 
         public void Start()
         {
-            //fullwatch.Start();
+            fullwatch.Start();
             hookIDMouse = SetHook(procMouse);
             hookIDKeyboard = SetHook(procKeyboard);
         }
 
-        public TimeSpan Restart()
+        public MonitorTime Restart()
         {            
             workwatch.Stop();
-            //fullwatch.Stop();
+            fullwatch.Stop();
             TimeSpan timeSpan = workwatch.Elapsed;
-            //TimeSpan timeSpanFull = fullwatch.Elapsed;
-            //fullwatch.Reset();
+            TimeSpan timeSpanFull = fullwatch.Elapsed;
+            fullwatch.Reset();
             workwatch.Reset();
-            return timeSpan;         
+            return new() { FullTime = timeSpanFull, WorkTime = timeSpan };         
         }
-        public TimeSpan Stop()
+        public MonitorTime Stop()
         {
             UnhookWindowsHookEx(hookIDMouse);
             UnhookWindowsHookEx(hookIDKeyboard);
             workwatch.Stop();
-            //fullwatch.Stop();
-            return workwatch.Elapsed;      
+            fullwatch.Stop();
+            return new() { FullTime = fullwatch.Elapsed, WorkTime = workwatch.Elapsed };      
         }
     }
 }
