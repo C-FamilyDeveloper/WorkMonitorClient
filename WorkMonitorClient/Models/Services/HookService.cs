@@ -16,7 +16,7 @@ namespace WorkMonitorClient.Models.Services
         private const int WHKEYBOARDLL = 13;
         private const int WHMOUSELL = 14;
         private Stopwatch fullwatch = new();
-        private Stopwatch workwatch = new ();
+        private Stopwatch workwatch = new();
         
         public HookService() 
         {
@@ -86,12 +86,11 @@ namespace WorkMonitorClient.Models.Services
         }
 
         public MonitorTime Restart()
-        {            
-            workwatch.Stop();
-            fullwatch.Stop();
+        {
             TimeSpan timeSpan = workwatch.Elapsed;
             TimeSpan timeSpanFull = fullwatch.Elapsed;
             fullwatch.Reset();
+            fullwatch.Start();
             workwatch.Reset();
             return new() { FullTime = timeSpanFull, WorkTime = timeSpan };         
         }

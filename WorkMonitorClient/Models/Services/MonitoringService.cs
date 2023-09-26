@@ -21,11 +21,13 @@ namespace WorkMonitorClient.Models.Services
         private int intervalMin;
         private int intervalMax;
         private readonly HttpService httpService;
+        private readonly LoggingService loggingService;
 
-        public MonitoringService(HttpService httpService)
+        public MonitoringService(HttpService httpService, LoggingService loggingService)
         {
             UserName = Environment.UserName;
             this.httpService = httpService;
+            this.loggingService = loggingService;
         }
         public void SetInterval(int intervalMinMilliseconds, int intervalMaxMilliseconds)
         {
@@ -42,12 +44,19 @@ namespace WorkMonitorClient.Models.Services
         private async void OnTimerElapsed(object? sender, ElapsedEventArgs e)
         {
             timerScreen.Stop();
-            await httpService.Send(new Screenshot 
+            try
+            {
+                await httpService.Send(new Screenshot
                 {
                     ClientName = UserName,
                     Image = screenshotService.GetScreenshot(),
                     ScreenshotDateTime = DateTime.Now
                 });
+            }
+            catch (Exception ex)
+            {
+                loggingService.SaveLog(ex.Message);
+            }
             timerScreen.Interval = CalculateTimerInterval(); 
             timerScreen.Start();          
         }
@@ -101,7 +110,8 @@ namespace WorkMonitorClient.Models.Services
                     }
                     catch (Exception ex)
                     {
-                        await httpService.Send(new Log { ClientName = UserName, LogDateTime = DateTime.Now, LogMessage = ex.Message });
+                        //await httpService.Send(new Log { ClientName = UserName, LogDateTime = DateTime.Now, LogMessage = ex.Message });
+                        loggingService.SaveLog(ex.Message);
                     }
                 }
             }, cancellationToken);                       

@@ -2,13 +2,7 @@
 using MVVMUtilities.Abstractions;
 using MVVMUtilities.Services;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows;
 using WorkMonitorClient.Models.Services;
 using WorkMonitorClient.ViewModels;
@@ -50,6 +44,7 @@ namespace WorkMonitorClient
             });
             services.AddSingleton<HttpService>();
             services.AddSingleton<MonitoringService>();
+            services.AddSingleton<LoggingService>();
         }
 
         private void OnStartup(object sender, StartupEventArgs e)
